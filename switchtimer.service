@@ -1,0 +1,11 @@
+[Unit]
+Description=Nintendo Switch-style laptop useage time
+
+[Service]
+WorkingDirectory=/home/dad/source/timer
+ExecStart=python3 -m switchtimer
+User=pat
+Group=pat
+
+[Install]
+WantedBy=multi-user.target
