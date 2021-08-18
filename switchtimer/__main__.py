@@ -13,13 +13,14 @@ logger = logging.getLogger(__name__)
 last_run_date = None
 data = None
 
-FILE_PATH = "test"
+FILE_PATH = "/etc/switchtimer/data"
 
 
 def main_loop():
     """
     Runs forever, recording how many minutes active and notifying
     """
+    global last_run_date
     while True:
         logger.debug("Checking user status..")
 
@@ -29,6 +30,7 @@ def main_loop():
         if cur_run != last_run_date:
             logger.debug("It's a brand new day!")
             data['pat'][cur_run_str] = default_entry()
+            last_run_date = cur_run
 
         cur_data = data['pat'][cur_run_str]
 
@@ -38,13 +40,11 @@ def main_loop():
 
         logger.debug(f"{cur_data}")
 
-        #if cur_data["minutes_active"] >= 60 and not cur_data["notify_1"]:
-        if cur_data["minutes_active"] >= 1 and not cur_data["notify_1"]:
+        if cur_data["minutes_active"] >= 60 and not cur_data["notify_1"]:
             cur_data["notify_1"] = True
             send_notification("One hour left!")
 
-        #if cur_data["minutes_active"] >= 110 and not cur_data["notify_2"]:
-        if cur_data["minutes_active"] >= 2 and not cur_data["notify_2"]:
+        if cur_data["minutes_active"] >= 110 and not cur_data["notify_2"]:
             cur_data["notify_2"] = True
             send_notification("Ten minutes left!")
 
@@ -57,8 +57,7 @@ def main_loop():
             send_notification("Time is up!", icon="clock")
 
         save_data(FILE_PATH, data)
-        # sleep(60)
-        sleep(10) # minutes are fast now
+        sleep(60)
 
 
 

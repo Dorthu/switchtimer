@@ -24,7 +24,7 @@ def send_notification(message: str, icon: str = "timer"):
     logger.debug(f"Sending notification: {message}")
 
     # TODO: Abstract this out a little
-    res = subprocess.run(["sudo", "-u" "pat", "notify-send", "Laptop Timer", message, "-i", icon])
+    res = subprocess.run(["notify-user", "pat", "Laptop Timer", message, "-i", icon])
 
     if res.returncode:
         logger.warning(f"notify-send exited with status {res.returncode}")
