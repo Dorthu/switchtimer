@@ -1,0 +1,1 @@
+notify-send-py==1.2.7

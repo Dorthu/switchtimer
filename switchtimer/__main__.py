@@ -6,7 +6,7 @@ from switchtimer.util import send_notification, user_is_active, date_string
 from switchtimer.data import load_data, save_data, default_entry
 
 
-logging.basicConfig(level=logging.DEBUG)
+logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 # used to handle day rollover
@@ -28,7 +28,7 @@ def main_loop():
         cur_run_str = date_string(cur_run)
 
         if cur_run != last_run_date:
-            logger.debug("It's a brand new day!")
+            logger.info("It's a brand new day!")
             data['pat'][cur_run_str] = default_entry()
             last_run_date = cur_run
 
@@ -54,7 +54,7 @@ def main_loop():
 
         if cur_data["minutes_active"] >= 120 and not cur_data["notify_4"]:
             cur_data["notify_4"] = True
-            send_notification("Time is up!", icon="clock")
+            send_notification("Time is up!", icon="clock", urgency="critical")
 
         save_data(FILE_PATH, data)
         sleep(60)

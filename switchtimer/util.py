@@ -17,18 +17,20 @@ def date_string(d: date) -> str:
     return f"{d.year}-{d.month}-{d.day}"
 
 
-def send_notification(message: str, icon: str = "timer"):
+def send_notification(message: str, icon: str = "timer", urgency: str = "low"):
     """
     Sends a notification using the `notify-send` shell command
     """
-    logger.debug(f"Sending notification: {message}")
+    if urgency != "critical":
+        logger.debug(f"Sending notification: {message}")
+    else:
+        logger.warning(f"Sending notification: {message}")
 
     # TODO: Abstract this out a little
-    res = subprocess.run(["notify-user", "pat", "Laptop Timer", message, "-i", icon])
+    res = subprocess.run(["notify-user", "pat", urgency, "Laptop Timer", message, "-i", icon])
 
     if res.returncode:
-        logger.warning(f"notify-send exited with status {res.returncode}")
-
+        logger.warning(f"notify-user exited with status {res.returncode}")
 
 
 def user_is_active(user: str) -> bool:
