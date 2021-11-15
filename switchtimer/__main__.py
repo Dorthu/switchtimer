@@ -15,6 +15,10 @@ data = None
 
 FILE_PATH = "/etc/switchtimer/data"
 
+# TODO: Make this configurable
+# This was reduced to 90 minutes due to poor academic performance (reading)
+ALLOWED_MINUTES = 90 #120
+
 
 def main_loop():
     """
@@ -40,19 +44,21 @@ def main_loop():
 
         logger.debug(f"{cur_data}")
 
-        if cur_data["minutes_active"] >= 60 and not cur_data["notify_1"]:
+        minutes_remaining = ALLOWED_MINUTES - cur_data["minutes_active"]
+
+        if minutes_remaining <= 60 and not cur_data["notify_1"]:
             cur_data["notify_1"] = True
             send_notification("One hour left!")
 
-        if cur_data["minutes_active"] >= 110 and not cur_data["notify_2"]:
+        if minutes_remaining <= 10 and not cur_data["notify_2"]:
             cur_data["notify_2"] = True
             send_notification("Ten minutes left!")
 
-        if cur_data["minutes_active"] >= 115 and not cur_data["notify_3"]:
+        if minutes_remaining <= 5 and not cur_data["notify_3"]:
             cur_data["notify_3"] = True
             send_notification("Five minutes left!")
 
-        if cur_data["minutes_active"] >= 120 and not cur_data["notify_4"]:
+        if minutes_remaining <= 0 and not cur_data["notify_4"]:
             cur_data["notify_4"] = True
             send_notification("Time is up!", icon="clock", urgency="critical")
 
